@@ -51,12 +51,11 @@ sheet.update(
 )
 
 headers = {
-    "User-Agent": (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/137.0.0.0 Safari/537.36"
-    ),
-    "Accept-Language": "en-IN,en;q=0.9"
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36",
+    "Accept-Language": "en-IN,en;q=0.9",
+    "Referer": "https://www.amazon.in/",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+    "Connection": "keep-alive"
 }
 
 # ==================================
@@ -91,27 +90,45 @@ for row, asin in asins:
         url = f"https://www.amazon.in/dp/{asin}"
 
         response = requests.get(
-            url,
-            headers=headers,
-            timeout=10
-        )
+    url,
+    headers=headers,
+    timeout=10
+)
 
-        soup = BeautifulSoup(
-            response.text,
-            "html.parser"
-        )
+print(f"\nProcessing: {asin}")
+print(f"Status Code: {response.status_code}")
+print(f"Final URL: {response.url}")
+
+if "robot check" in response.text.lower():
+    print("ROBOT CHECK DETECTED")
+
+soup = BeautifulSoup(
+    response.text,
+    "html.parser"
+)
 
         # Product Name
 
-        title = (
-            soup.find("span", {"id": "productTitle"})
-            or soup.find("h1")
-        )
+      title = (
+    soup.select_one("#productTitle")
+    or soup.select_one("span#productTitle")
+    or soup.find("h1")
+)
 
-        product = (
-            title.get_text(strip=True)
-            if title else "Not Found"
-        )
+if title:
+    product = title.get_text(strip=True)
+else:
+    product = "Not Found"
+
+print(f"Product: {product}")
+if product == "Not Found":
+
+    filename = f"{asin}.html"
+
+    with open(filename, "w", encoding="utf-8") as f:
+        f.write(response.text)
+
+    print(f"Saved HTML: {filename}")
 
         # Price
 
@@ -135,6 +152,7 @@ for row, asin in asins:
         else:
 
             current_price = "Not Found"
+            print(f"Price: {current_price}")
 
         # Seller
 
