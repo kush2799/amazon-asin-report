@@ -1,0 +1,180 @@
+import gspread
+import requests
+from bs4 import BeautifulSoup
+from oauth2client.service_account import ServiceAccountCredentials
+from datetime import datetime
+import time
+
+# ==================================
+# SELLER MAPPING
+# ==================================
+
+seller_mapping = {
+    "The Pop Market": ("Official", "SMG"),
+    "Novus Retail": ("Official", "Bathla")
+}
+
+# ==================================
+# GOOGLE SHEETS CONNECTION
+# ==================================
+
+scope = [
+    "https://spreadsheets.google.com/feeds",
+    "https://www.googleapis.com/auth/drive"
+]
+
+creds = ServiceAccountCredentials.from_json_keyfile_name(
+    "credentials.json",
+    scope
+)
+
+client = gspread.authorize(creds)
+
+sheet = client.open("ASIN_Report").sheet1
+
+# ==================================
+# HEADERS
+# ==================================
+
+sheet.update(
+    "A1:H1",
+    [[
+        "Date",
+        "Partner Type",
+        "Official B2B Partner",
+        "Store Name",
+        "ASIN",
+        "Link",
+        "Product",
+        "Current Selling Price"
+    ]]
+)
+
+headers = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/137.0.0.0 Safari/537.36"
+    ),
+    "Accept-Language": "en-IN,en;q=0.9"
+}
+
+# ==================================
+# READ ASINS FROM COLUMN E
+# ==================================
+
+asins = []
+
+row_num = 2
+
+while True:
+
+    asin = sheet.cell(row_num, 5).value
+
+    if not asin:
+        break
+
+    asins.append((row_num, asin))
+
+    row_num += 1
+
+# ==================================
+# PROCESS
+# ==================================
+
+today = datetime.today().strftime("%d/%m/%Y")
+
+for row, asin in asins:
+
+    try:
+
+        url = f"https://www.amazon.in/dp/{asin}"
+
+        response = requests.get(
+            url,
+            headers=headers,
+            timeout=10
+        )
+
+        soup = BeautifulSoup(
+            response.text,
+            "html.parser"
+        )
+
+        # Product Name
+
+        title = (
+            soup.find("span", {"id": "productTitle"})
+            or soup.find("h1")
+        )
+
+        product = (
+            title.get_text(strip=True)
+            if title else "Not Found"
+        )
+
+        # Price
+
+        price = (
+            soup.select_one(".a-price-whole")
+            or soup.select_one("span.a-price span.a-offscreen")
+        )
+
+        if price:
+
+            current_price = price.get_text(strip=True)
+
+            current_price = (
+                current_price
+                .replace("₹", "")
+                .replace(",", "")
+                .replace(".", "")
+                .strip()
+            )
+
+        else:
+
+            current_price = "Not Found"
+
+        # Seller
+
+        seller = soup.find(id="sellerProfileTriggerId")
+
+        seller_name = (
+            seller.get_text(strip=True)
+            if seller else "Unknown Seller"
+        )
+
+        print(f"Seller: {seller_name}")
+
+        # Mapping
+
+        if seller_name in seller_mapping:
+
+            partner_type, official_partner = seller_mapping[seller_name]
+
+        else:
+
+            partner_type = "Unofficial"
+            official_partner = "N/A"
+
+        # Update Sheet
+
+        sheet.update_cell(row, 1, today)
+        sheet.update_cell(row, 2, partner_type)
+        sheet.update_cell(row, 3, official_partner)
+        sheet.update_cell(row, 4, seller_name)
+        sheet.update_cell(row, 5, asin)
+        sheet.update_cell(row, 6, url)
+        sheet.update_cell(row, 7, product)
+        sheet.update_cell(row, 8, current_price)
+
+        print(f"Updated: {asin}")
+
+        time.sleep(2)
+
+    except Exception as e:
+
+        print(f"Error: {asin} - {e}")
+
+print("\nCompleted Successfully")
