@@ -1,6 +1,8 @@
 name: Amazon ASIN Report V2
 
 on:
+  schedule:
+    - cron: '30 3 * * *'
   workflow_dispatch:
 
 jobs:
