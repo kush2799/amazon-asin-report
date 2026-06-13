@@ -164,7 +164,6 @@ for row, asin in asins:
             seller.get_text(strip=True)
             if seller else "Unknown Seller"
         )
-```
 
         print(f"Seller: {seller_name}")
 
