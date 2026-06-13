@@ -83,7 +83,6 @@ while True:
 
 today = datetime.today().strftime("%d/%m/%Y")
 
-```python
 for row, asin in asins:
 
     try:
