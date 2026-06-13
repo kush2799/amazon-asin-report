@@ -1,4 +1,4 @@
-name: Amazon ASIN Report
+name: Amazon ASIN Report V2
 
 on:
   workflow_dispatch:
