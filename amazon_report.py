@@ -83,6 +83,7 @@ while True:
 
 today = datetime.today().strftime("%d/%m/%Y")
 
+```python
 for row, asin in asins:
 
     try:
@@ -90,45 +91,46 @@ for row, asin in asins:
         url = f"https://www.amazon.in/dp/{asin}"
 
         response = requests.get(
-    url,
-    headers=headers,
-    timeout=10
-)
+            url,
+            headers=headers,
+            timeout=10
+        )
 
-print(f"\nProcessing: {asin}")
-print(f"Status Code: {response.status_code}")
-print(f"Final URL: {response.url}")
+        print(f"\nProcessing: {asin}")
+        print(f"Status Code: {response.status_code}")
+        print(f"Final URL: {response.url}")
 
-if "robot check" in response.text.lower():
-    print("ROBOT CHECK DETECTED")
+        if "robot check" in response.text.lower():
+            print("ROBOT CHECK DETECTED")
 
-soup = BeautifulSoup(
-    response.text,
-    "html.parser"
-)
+        soup = BeautifulSoup(
+            response.text,
+            "html.parser"
+        )
 
         # Product Name
 
-      title = (
-    soup.select_one("#productTitle")
-    or soup.select_one("span#productTitle")
-    or soup.find("h1")
-)
+        title = (
+            soup.select_one("#productTitle")
+            or soup.select_one("span#productTitle")
+            or soup.find("h1")
+        )
 
-if title:
-    product = title.get_text(strip=True)
-else:
-    product = "Not Found"
+        if title:
+            product = title.get_text(strip=True)
+        else:
+            product = "Not Found"
 
-print(f"Product: {product}")
-if product == "Not Found":
+        print(f"Product: {product}")
 
-    filename = f"{asin}.html"
+        if product == "Not Found":
 
-    with open(filename, "w", encoding="utf-8") as f:
-        f.write(response.text)
+            filename = f"{asin}.html"
 
-    print(f"Saved HTML: {filename}")
+            with open(filename, "w", encoding="utf-8") as f:
+                f.write(response.text)
+
+            print(f"Saved HTML: {filename}")
 
         # Price
 
@@ -152,7 +154,8 @@ if product == "Not Found":
         else:
 
             current_price = "Not Found"
-            print(f"Price: {current_price}")
+
+        print(f"Price: {current_price}")
 
         # Seller
 
@@ -162,6 +165,7 @@ if product == "Not Found":
             seller.get_text(strip=True)
             if seller else "Unknown Seller"
         )
+```
 
         print(f"Seller: {seller_name}")
 
