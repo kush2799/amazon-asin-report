@@ -229,7 +229,7 @@ print(f"Excel Created: {excel_file}")
 sender_email = os.environ.get("EMAIL_USER")
 sender_password = os.environ.get("EMAIL_PASSWORD")
 
-receiver_email = "[v-kushagra.bachhil@realmeindia.com](mailto:v-kushagra.bachhil@realmeindia.com)"
+receiver_email = "v-kushagra.bachhil@realmeindia.com"
 
 subject = f"Amazon ASIN Daily Report - {today_report}"
 
