@@ -2,3 +2,4 @@ gspread
 requests
 beautifulsoup4
 oauth2client
+openpyxl
