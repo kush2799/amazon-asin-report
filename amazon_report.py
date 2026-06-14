@@ -206,6 +206,24 @@ for row, asin in asins:
 
 print("\nCompleted Successfully")
 
+today_report = datetime.today().strftime("%d-%m-%Y")
+
+excel_file = f"Amazon_ASIN_Report_{today_report}.xlsx"
+
+wb = Workbook()
+ws = wb.active
+
+ws.title = "Amazon Report"
+
+all_rows = sheet.get_all_values()
+
+for row_data in all_rows:
+    ws.append(row_data)
+
+wb.save(excel_file)
+
+print(f"Excel Created: {excel_file}")
+
 # EMAIL REPORT
 
 sender_email = os.environ.get("EMAIL_USER")
@@ -213,7 +231,7 @@ sender_password = os.environ.get("EMAIL_PASSWORD")
 
 receiver_email = "[v-kushagra.bachhil@realmeindia.com](mailto:v-kushagra.bachhil@realmeindia.com)"
 
-subject = f"Amazon ASIN Daily Report - {today}"
+subject = f"Amazon ASIN Daily Report - {today_report}"
 
 body = f"""
 Hi Kushagra,
