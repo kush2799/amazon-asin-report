@@ -4,6 +4,9 @@ from bs4 import BeautifulSoup
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 import time
+import os
+import smtplib
+from email.mime.text import MIMEText
 
 # ==================================
 # SELLER MAPPING
@@ -198,3 +201,44 @@ for row, asin in asins:
         print(f"Error: {asin} - {e}")
 
 print("\nCompleted Successfully")
+
+# EMAIL REPORT
+
+sender_email = os.environ.get("EMAIL_USER")
+sender_password = os.environ.get("EMAIL_PASSWORD")
+
+receiver_email = "v-kushagra.bachhil@realmeindia.com"
+
+subject = "Amazon ASIN Daily Report"
+
+body = """
+Hi Kushagra,
+
+Amazon ASIN report has been updated successfully.
+
+Please check the Google Sheet for the latest data.
+
+Regards,
+GitHub Automation
+"""
+
+msg = MIMEText(body)
+msg["Subject"] = subject
+msg["From"] = sender_email
+msg["To"] = receiver_email
+
+try:
+    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server.starttls()
+    server.login(sender_email, sender_password)
+    server.sendmail(
+        sender_email,
+        receiver_email,
+        msg.as_string()
+    )
+    server.quit()
+
+    print("Email sent successfully")
+
+except Exception as e:
+    print(f"Email Error: {e}")
