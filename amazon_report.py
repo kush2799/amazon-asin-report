@@ -251,27 +251,25 @@ part.add_header(
 msg.attach(part)
 try:
 
+    server = smtplib.SMTP("smtp.gmail.com", 587)
 
-server = smtplib.SMTP("smtp.gmail.com", 587)
+    server.starttls()
 
-server.starttls()
+    server.login(
+        sender_email,
+        sender_password
+    )
 
-server.login(
-    sender_email,
-    sender_password
-)
+    server.sendmail(
+        sender_email,
+        receiver_email,
+        msg.as_string()
+    )
 
-server.sendmail(
-    sender_email,
-    receiver_email,
-    msg.as_string()
-)
+    server.quit()
 
-server.quit()
-
-print("Email with attachment sent successfully")
-
+    print("Email with attachment sent successfully")
 
 except Exception as e:
 
-print(f"Email Error: {e}")
+    print(f"Email Error: {e}")
