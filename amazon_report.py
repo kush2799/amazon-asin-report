@@ -211,38 +211,69 @@ print("\nCompleted Successfully")
 sender_email = os.environ.get("EMAIL_USER")
 sender_password = os.environ.get("EMAIL_PASSWORD")
 
-receiver_email = "v-kushagra.bachhil@realmeindia.com"
+receiver_email = "[v-kushagra.bachhil@realmeindia.com](mailto:v-kushagra.bachhil@realmeindia.com)"
 
-subject = "Amazon ASIN Daily Report"
+subject = f"Amazon ASIN Daily Report - {today}"
 
-body = """
+body = f"""
 Hi Kushagra,
 
-Amazon ASIN report has been updated successfully.
-
-Please check the Google Sheet for the latest data.
+Please find attached the Amazon ASIN report for {today}.
 
 Regards,
 GitHub Automation
 """
 
-msg = MIMEText(body)
+msg = MIMEMultipart()
+
 msg["Subject"] = subject
 msg["From"] = sender_email
 msg["To"] = receiver_email
 
-try:
-    server = smtplib.SMTP("smtp.gmail.com", 587)
-    server.starttls()
-    server.login(sender_email, sender_password)
-    server.sendmail(
-        sender_email,
-        receiver_email,
-        msg.as_string()
-    )
-    server.quit()
+msg.attach(MIMEText(body, "plain"))
 
-    print("Email sent successfully")
+# Attach Excel File
+
+with open(excel_file, "rb") as attachment:
+
+
+part = MIMEBase("application", "octet-stream")
+
+part.set_payload(attachment.read())
+
+encoders.encode_base64(part)
+
+part.add_header(
+    "Content-Disposition",
+    f"attachment; filename={excel_file}"
+)
+
+msg.attach(part)
+
+
+try:
+
+
+server = smtplib.SMTP("smtp.gmail.com", 587)
+
+server.starttls()
+
+server.login(
+    sender_email,
+    sender_password
+)
+
+server.sendmail(
+    sender_email,
+    receiver_email,
+    msg.as_string()
+)
+
+server.quit()
+
+print("Email with attachment sent successfully")
+
 
 except Exception as e:
-    print(f"Email Error: {e}")
+
+print(f"Email Error: {e}")
