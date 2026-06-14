@@ -236,20 +236,18 @@ msg.attach(MIMEText(body, "plain"))
 
 with open(excel_file, "rb") as attachment:
 
+    part = MIMEBase("application", "octet-stream")
 
-part = MIMEBase("application", "octet-stream")
+    part.set_payload(attachment.read())
 
-part.set_payload(attachment.read())
+    encoders.encode_base64(part)
 
-encoders.encode_base64(part)
+    part.add_header(
+        "Content-Disposition",
+        f"attachment; filename={excel_file}"
+    )
 
-part.add_header(
-    "Content-Disposition",
-    f"attachment; filename={excel_file}"
-)
-
-msg.attach(part)
-
+    msg.attach(part)
 
 try:
 
