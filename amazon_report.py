@@ -246,9 +246,9 @@ for row, asin in asins:
     
         time.sleep(2)
     
-        except Exception as e:
+    except Exception as e:
     
-            print(f"Error: {asin} - {e}")
+        print(f"Error: {asin} - {e}")
 
 
 print("\nCompleted Successfully")
