@@ -95,75 +95,55 @@ today = datetime.today().strftime("%d/%m/%Y")
 report_row = 2
 
 for row, asin in asins:
-    
-    report_sheet.update_cell(report_row, 1, today)
-    report_sheet.update_cell(report_row, 2, partner_type)
-    report_sheet.update_cell(report_row, 3, official_partner)
-    report_sheet.update_cell(report_row, 4, seller_name)
-    report_sheet.update_cell(report_row, 5, asin)
-    report_sheet.update_cell(report_row, 6, url)
-    report_sheet.update_cell(report_row, 7, product)
-    report_sheet.update_cell(report_row, 8, current_price)
-
-    report_row += 1
 
     try:
-
+    
         url = f"https://www.amazon.in/dp/{asin}"
-
+    
         response = requests.get(
             url,
             headers=headers,
             timeout=10
         )
-
+    
         print(f"\nProcessing: {asin}")
         print(f"Status Code: {response.status_code}")
         print(f"Final URL: {response.url}")
-
+    
         if "robot check" in response.text.lower():
             print("ROBOT CHECK DETECTED")
-
+    
         soup = BeautifulSoup(
             response.text,
             "html.parser"
         )
-
+    
         # Product Name
-
+    
         title = (
             soup.select_one("#productTitle")
             or soup.select_one("span#productTitle")
             or soup.find("h1")
         )
-
+    
         if title:
             product = title.get_text(strip=True)
         else:
             product = "Not Found"
-
+    
         print(f"Product: {product}")
-
-        if product == "Not Found":
-
-            filename = f"{asin}.html"
-
-            with open(filename, "w", encoding="utf-8") as f:
-                f.write(response.text)
-
-            print(f"Saved HTML: {filename}")
-
+    
         # Price
-
+    
         price = (
             soup.select_one(".a-price-whole")
             or soup.select_one("span.a-price span.a-offscreen")
         )
-
+    
         if price:
-
+    
             current_price = price.get_text(strip=True)
-
+    
             current_price = (
                 current_price
                 .replace("₹", "")
@@ -171,53 +151,56 @@ for row, asin in asins:
                 .replace(".", "")
                 .strip()
             )
-
+    
         else:
-
+    
             current_price = "Not Found"
-
+    
         print(f"Price: {current_price}")
-
+    
         # Seller
-
+    
         seller = soup.find(id="sellerProfileTriggerId")
-
+    
         seller_name = (
             seller.get_text(strip=True)
             if seller else "Unknown Seller"
         )
-
+    
         print(f"Seller: {seller_name}")
-
+    
         # Mapping
-
+    
         if seller_name in seller_mapping:
-
+    
             partner_type, official_partner = seller_mapping[seller_name]
-
+    
         else:
-
+    
             partner_type = "Unofficial"
             official_partner = "N/A"
-
-        # Update Sheet
-
-        report_sheet.update_cell(row, 1, today)
-        report_sheet.update_cell(row, 2, partner_type)
-        report_sheet.update_cell(row, 3, official_partner)
-        report_sheet.update_cell(row, 4, seller_name)
-        report_sheet.update_cell(row, 5, asin)
-        report_sheet.update_cell(row, 6, url)
-        report_sheet.update_cell(row, 7, product)
-        report_sheet.update_cell(row, 8, current_price)
-
+    
+        # Update Report Sheet
+    
+        report_sheet.update_cell(report_row, 1, today)
+        report_sheet.update_cell(report_row, 2, partner_type)
+        report_sheet.update_cell(report_row, 3, official_partner)
+        report_sheet.update_cell(report_row, 4, seller_name)
+        report_sheet.update_cell(report_row, 5, asin)
+        report_sheet.update_cell(report_row, 6, url)
+        report_sheet.update_cell(report_row, 7, product)
+        report_sheet.update_cell(report_row, 8, current_price)
+    
+        report_row += 1
+    
         print(f"Updated: {asin}")
-
+    
         time.sleep(2)
-
+    
     except Exception as e:
-
+    
         print(f"Error: {asin} - {e}")
+
 
 print("\nCompleted Successfully")
 
