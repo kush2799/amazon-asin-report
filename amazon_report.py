@@ -1,5 +1,6 @@
 import gspread
 import requests
+import traceback
 from bs4 import BeautifulSoup
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
@@ -245,9 +246,11 @@ for row, asin in asins:
         print(f"Updated: {asin}")
     
         time.sleep(2)
+        
     except Exception as e:
-    
-        print(f"Error: {asin} - {e}")
+
+        print(f"Error: {asin}")
+        traceback.print_exc()
 
 
 print("\nCompleted Successfully")
