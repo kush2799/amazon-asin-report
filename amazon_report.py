@@ -101,7 +101,7 @@ if history_date not in history_headers:
     
     price_history_sheet.update_cell(
         1,
-        len(history_headers) + 1
+        len(history_headers) + 1,
         history_date
     )
 
