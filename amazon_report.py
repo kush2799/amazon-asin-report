@@ -41,6 +41,7 @@ spreadsheet = client.open("ASIN_Report")
 
 master_sheet = spreadsheet.worksheet("ASIN_Master")
 report_sheet = spreadsheet.worksheet("Report")
+price_history_sheet = spreadsheet.worksheet("Price_History")
 # ==================================
 # HEADERS
 # ==================================
@@ -91,6 +92,21 @@ while True:
 # ==================================
 
 today = datetime.today().strftime("%d/%m/%Y")
+history_date = datetime.today().strftime("%d-%b-%Y")
+
+headers = price_history_sheet.row_values(1)
+
+if history_date not in headers:
+
+    price_history_sheet.update_cell(
+        1,
+        len(headers) + 1,
+        history_date
+    )
+
+headers = price_history_sheet.row_values(1)
+
+date_col = headers.index(history_date) + 1
 
 report_row = 2
 
@@ -195,6 +211,34 @@ for row, asin in asins:
                 current_price
             ]]
         )
+
+history_asins = price_history_sheet.col_values(1)
+
+if asin in history_asins:
+
+    history_row = history_asins.index(asin) + 1
+
+else:
+
+    history_row = len(history_asins) + 1
+
+    price_history_sheet.update_cell(
+        history_row,
+        1,
+        asin
+    )
+
+    price_history_sheet.update_cell(
+        history_row,
+        2,
+        product
+    )
+
+price_history_sheet.update_cell(
+    history_row,
+    date_col,
+    current_price
+)
     
         report_row += 1
     
