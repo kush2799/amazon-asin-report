@@ -92,7 +92,20 @@ while True:
 
 today = datetime.today().strftime("%d/%m/%Y")
 
+report_row = 2
+
 for row, asin in asins:
+    
+    report_sheet.update_cell(report_row, 1, today)
+    report_sheet.update_cell(report_row, 2, partner_type)
+    report_sheet.update_cell(report_row, 3, official_partner)
+    report_sheet.update_cell(report_row, 4, seller_name)
+    report_sheet.update_cell(report_row, 5, asin)
+    report_sheet.update_cell(report_row, 6, url)
+    report_sheet.update_cell(report_row, 7, product)
+    report_sheet.update_cell(report_row, 8, current_price)
+
+    report_row += 1
 
     try:
 
