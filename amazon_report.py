@@ -248,7 +248,7 @@ for row, asin in asins:
     
         except Exception as e:
     
-        print(f"Error: {asin} - {e}")
+            print(f"Error: {asin} - {e}")
 
 
 print("\nCompleted Successfully")
