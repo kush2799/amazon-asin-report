@@ -182,14 +182,19 @@ for row, asin in asins:
     
         # Update Report Sheet
     
-        report_sheet.update_cell(report_row, 1, today)
-        report_sheet.update_cell(report_row, 2, partner_type)
-        report_sheet.update_cell(report_row, 3, official_partner)
-        report_sheet.update_cell(report_row, 4, seller_name)
-        report_sheet.update_cell(report_row, 5, asin)
-        report_sheet.update_cell(report_row, 6, url)
-        report_sheet.update_cell(report_row, 7, product)
-        report_sheet.update_cell(report_row, 8, current_price)
+        report_sheet.update(
+            f"A{report_row}:H{report_row}",
+            [[
+                today,
+                partner_type,
+                official_partner,
+                seller_name,
+                asin,
+                url,
+                product,
+                current_price
+            ]]
+        )
     
         report_row += 1
     
