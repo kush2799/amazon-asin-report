@@ -37,14 +37,15 @@ creds = ServiceAccountCredentials.from_json_keyfile_name(
 
 client = gspread.authorize(creds)
 
-sheet = client.open("ASIN_Report").sheet1
+spreadsheet = client.open("ASIN_Report")
 
+master_sheet = spreadsheet.worksheet("ASIN_Master")
+report_sheet = spreadsheet.worksheet("Report")
 # ==================================
 # HEADERS
 # ==================================
-sheet.clear()
-
-sheet.update(
+report_sheet.clear()
+report_sheet.update(
     "A1:H1",
     [[
         "Date",
@@ -76,7 +77,7 @@ row_num = 2
 
 while True:
 
-    asin = sheet.cell(row_num, 5).value
+    asin = master_sheet.cell(row_num, 1).value
 
     if not asin:
         break
@@ -188,14 +189,14 @@ for row, asin in asins:
 
         # Update Sheet
 
-        sheet.update_cell(row, 1, today)
-        sheet.update_cell(row, 2, partner_type)
-        sheet.update_cell(row, 3, official_partner)
-        sheet.update_cell(row, 4, seller_name)
-        sheet.update_cell(row, 5, asin)
-        sheet.update_cell(row, 6, url)
-        sheet.update_cell(row, 7, product)
-        sheet.update_cell(row, 8, current_price)
+        report_sheet.update_cell(row, 1, today)
+        report_sheet.update_cell(row, 2, partner_type)
+        report_sheet.update_cell(row, 3, official_partner)
+        report_sheet.update_cell(row, 4, seller_name)
+        report_sheet.update_cell(row, 5, asin)
+        report_sheet.update_cell(row, 6, url)
+        report_sheet.update_cell(row, 7, product)
+        report_sheet.update_cell(row, 8, current_price)
 
         print(f"Updated: {asin}")
 
@@ -216,7 +217,7 @@ ws = wb.active
 
 ws.title = "Amazon Report"
 
-all_rows = sheet.get_all_values()
+all_rows = report_sheet.get_all_values()
 
 for row_data in all_rows:
     ws.append(row_data)
