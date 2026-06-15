@@ -159,13 +159,6 @@ for row, asin in asins:
         print(f"Price: {current_price}")
     
         # Seller
-    
-        sellers = soup.find_all(id="sellerProfileTriggerId")
-
-        print("\nALL SELLERS FOUND:")
-
-        for s in sellers:
-            print(s.get_text(strip=True))
 
         seller = soup.find(id="sellerProfileTriggerId")
     
