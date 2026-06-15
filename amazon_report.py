@@ -42,6 +42,7 @@ sheet = client.open("ASIN_Report").sheet1
 # ==================================
 # HEADERS
 # ==================================
+sheet.clear()
 
 sheet.update(
     "A1:H1",
