@@ -95,19 +95,19 @@ while True:
 today = datetime.today().strftime("%d/%m/%Y")
 history_date = datetime.today().strftime("%d-%b-%Y")
 
-headers = price_history_sheet.row_values(1)
+history_headers = price_history_sheet.row_values(1)
 
-if history_date not in headers:
-
+if history_date not in history_headers:
+    
     price_history_sheet.update_cell(
         1,
-        len(headers) + 1,
+        len(history_headers) + 1
         history_date
     )
 
-headers = price_history_sheet.row_values(1)
+history_headers = price_history_sheet.row_values(1)
 
-date_col = headers.index(history_date) + 1
+date_col = history_headers.index(history_date) + 1
 
 report_row = 2
 
