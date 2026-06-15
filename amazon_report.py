@@ -245,7 +245,6 @@ for row, asin in asins:
         print(f"Updated: {asin}")
     
         time.sleep(2)
-    
     except Exception as e:
     
         print(f"Error: {asin} - {e}")
