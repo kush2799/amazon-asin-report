@@ -212,33 +212,33 @@ for row, asin in asins:
             ]]
         )
 
-history_asins = price_history_sheet.col_values(1)
-
-if asin in history_asins:
-
-    history_row = history_asins.index(asin) + 1
-
-else:
-
-    history_row = len(history_asins) + 1
-
-    price_history_sheet.update_cell(
-        history_row,
-        1,
-        asin
-    )
-
-    price_history_sheet.update_cell(
-        history_row,
-        2,
-        product
-    )
-
-price_history_sheet.update_cell(
-    history_row,
-    date_col,
-    current_price
-)
+        history_asins = price_history_sheet.col_values(1)
+        
+        if asin in history_asins:
+        
+            history_row = history_asins.index(asin) + 1
+        
+        else:
+        
+            history_row = len(history_asins) + 1
+        
+            price_history_sheet.update_cell(
+                history_row,
+                1,
+                asin
+            )
+        
+            price_history_sheet.update_cell(
+                history_row,
+                2,
+                product
+            )
+        
+        price_history_sheet.update_cell(
+            history_row,
+            date_col,
+            current_price
+        )
     
         report_row += 1
     
@@ -246,7 +246,7 @@ price_history_sheet.update_cell(
     
         time.sleep(2)
     
-    except Exception as e:
+        except Exception as e:
     
         print(f"Error: {asin} - {e}")
 
