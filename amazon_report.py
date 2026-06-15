@@ -47,8 +47,8 @@ price_history_sheet = spreadsheet.worksheet("Price_History")
 # ==================================
 report_sheet.clear()
 report_sheet.update(
-    "A1:H1",
-    [[
+    range_name="A1:H1",
+    values=[[
         "Date",
         "Partner Type",
         "Official B2B Partner",
@@ -199,8 +199,8 @@ for row, asin in asins:
         # Update Report Sheet
     
         report_sheet.update(
-            f"A{report_row}:H{report_row}",
-            [[
+            range_name=f"A{report_row}:H{report_row}",
+            values=[[
                 today,
                 partner_type,
                 official_partner,
