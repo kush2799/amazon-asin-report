@@ -71,6 +71,12 @@ avg_price = (
     sum(prices) / len(prices)
     if prices else 0
 )
+col1, col2, col3, col4 = st.columns(4)
+
+col1.metric("Total ASINs", total_asins)
+col2.metric("Official", official_count)
+col3.metric("Unofficial", unofficial_count)
+col4.metric("Avg Price", f"₹ {avg_price:,.0f}")
 
 # ==========================================
 # DASHBOARD METRICS
