@@ -4,3 +4,4 @@ beautifulsoup4
 oauth2client
 openpyxl
 streamlit
+pandas
