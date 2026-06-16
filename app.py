@@ -34,6 +34,7 @@ client = gspread.authorize(creds)
 spreadsheet = client.open("ASIN_Report")
 
 report_sheet = spreadsheet.worksheet("Report")
+price_history_sheet = spreadsheet.worksheet("Price_History")
 
 # Search Box
 
@@ -71,6 +72,26 @@ if asin:
 
         st.write("### Official B2B Partner")
         st.write(result["Official B2B Partner"])
+
+        st.write("### Price History")
+
+        history_data = price_history_sheet.get_all_values()
+        
+        for history_row in history_data[1:]:
+        
+            if history_row[0] == asin:
+        
+                headers = history_data[0]
+        
+                for i in range(2, len(headers)):
+        
+                    if i < len(history_row):
+        
+                        st.write(
+                            f"{headers[i]} : ₹ {history_row[i]}"
+                        )
+        
+                break
 
     else:
 
