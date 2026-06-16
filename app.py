@@ -119,20 +119,32 @@ avg_price = (
 # SEARCH
 # ==========================================
 
-asin = st.text_input("Enter ASIN")
+search_text = st.text_input(
+    "Search ASIN or Product Name"
+)
 
-if asin:
-
+if search_text:
+    
     data = report_sheet.get_all_records()
 
     result = None
 
     for row in data:
 
-        if str(row["ASIN"]).strip() == asin.strip():
-
+        asin_match = (
+            search_text.lower()
+            in str(row["ASIN"]).lower()
+        )
+    
+        product_match = (
+            search_text.lower()
+            in str(row["Product"]).lower()
+        )
+    
+        if asin_match or product_match:
+    
             result = row
-
+    
             break
 
     if result:
@@ -166,7 +178,7 @@ if asin:
 
         for history_row in history_data[1:]:
 
-            if history_row[0] == asin:
+            if history_row[0] == result["ASIN"]:
 
                 headers = history_data[0]
 
