@@ -45,23 +45,23 @@ if asin:
             break
         if result:
 
-        st.success("ASIN Found")
-
-        st.write("### Product")
-        st.write(result["Product"])
-
-        st.write("### Current Price")
-        st.write(f"₹ {result['Current Selling Price']}")
-
-        st.write("### Seller")
-        st.write(result["Store Name"])
-
-        st.write("### Partner Type")
-        st.write(result["Partner Type"])
-
-        st.write("### Official B2B Partner")
-        st.write(result["Official B2B Partner"])
-
-    else:
-
-        st.error("ASIN Not Found")
+            st.success("ASIN Found")
+    
+            st.write("### Product")
+            st.write(result["Product"])
+    
+            st.write("### Current Price")
+            st.write(f"₹ {result['Current Selling Price']}")
+    
+            st.write("### Seller")
+            st.write(result["Store Name"])
+    
+            st.write("### Partner Type")
+            st.write(result["Partner Type"])
+    
+            st.write("### Official B2B Partner")
+            st.write(result["Official B2B Partner"])
+    
+        else:
+    
+            st.error("ASIN Not Found")
