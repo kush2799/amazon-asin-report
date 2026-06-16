@@ -15,6 +15,28 @@ st.set_page_config(
 
 st.title("Amazon ASIN Tracker")
 
+col1, col2, col3, col4 = st.columns(4)
+
+col1.metric(
+    "Total ASINs",
+    total_asins
+)
+
+col2.metric(
+    "Official",
+    official_count
+)
+
+col3.metric(
+    "Unofficial",
+    unofficial_count
+)
+
+col4.metric(
+    "Avg Price",
+    f"₹ {avg_price:,.0f}"
+)
+
 # ==========================================
 # GOOGLE SHEETS CONNECTION
 # ==========================================
@@ -40,6 +62,43 @@ spreadsheet = client.open("ASIN_Report")
 
 report_sheet = spreadsheet.worksheet("Report")
 price_history_sheet = spreadsheet.worksheet("Price_History")
+
+# ==========================================
+# DASHBOARD METRICS
+# ==========================================
+
+report_data = report_sheet.get_all_records()
+
+total_asins = len(report_data)
+
+official_count = len([
+    row for row in report_data
+    if row["Partner Type"] == "Official"
+])
+
+unofficial_count = len([
+    row for row in report_data
+    if row["Partner Type"] == "Unofficial"
+])
+
+prices = []
+
+for row in report_data:
+
+    try:
+
+        prices.append(
+            float(row["Current Selling Price"])
+        )
+
+    except:
+
+        pass
+
+avg_price = (
+    sum(prices) / len(prices)
+    if prices else 0
+)
 
 # ==========================================
 # SEARCH
