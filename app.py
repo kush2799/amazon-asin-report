@@ -164,9 +164,6 @@ if search_text:
         st.write("### Seller")
         st.write(result["Store Name"])
 
-        st.write("### Seller")
-        st.write(result["Store Name"])
-
         st.write("### Partner Type")
         st.write(result["Partner Type"])
 
@@ -180,40 +177,40 @@ if search_text:
         st.write("### Price History")
 
         history_data = price_history_sheet.get_all_values()
-
+        
         price_data = []
         price_values = []
-
+        
         for history_row in history_data[1:]:
-
+        
             if history_row[0] == result["ASIN"]:
-
+        
                 headers = history_data[0]
-
+        
                 for i in range(2, len(headers)):
-
+        
                     if i < len(history_row):
-
+        
                         st.write(
                             f"{headers[i]} : ₹ {history_row[i]}"
                         )
-                break
-
+        
                         try:
-
+        
+                            price = float(history_row[i])
+        
                             price_data.append({
                                 "Date": headers[i],
-                                "Price": float(history_row[i])
+                                "Price": price
                             })
-                            price_values.append(
-                                float(history_row[i])
-                            )
-
+        
+                            price_values.append(price)
+        
                         except:
-
+        
                             pass
-
-                        break
+        
+                break
         # ==========================================
         # PRICE CHANGE
         # ==========================================
