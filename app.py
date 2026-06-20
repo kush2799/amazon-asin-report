@@ -197,6 +197,7 @@ if search_text:
                         st.write(
                             f"{headers[i]} : ₹ {history_row[i]}"
                         )
+                break
 
                         try:
 
