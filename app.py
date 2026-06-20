@@ -156,6 +156,13 @@ if search_text:
 
         st.write("### Current Price")
         st.write(f"₹ {result['Current Selling Price']}")
+        
+        current_price = float(
+            result["Current Selling Price"]
+        )
+        
+        st.write("### Seller")
+        st.write(result["Store Name"])
 
         st.write("### Seller")
         st.write(result["Store Name"])
@@ -175,6 +182,7 @@ if search_text:
         history_data = price_history_sheet.get_all_values()
 
         price_data = []
+        price_values = []
 
         for history_row in history_data[1:]:
 
@@ -196,13 +204,46 @@ if search_text:
                                 "Date": headers[i],
                                 "Price": float(history_row[i])
                             })
+                            price_values.append(
+                                float(history_row[i])
+                            )
 
                         except:
 
                             pass
 
-                break
-
+                        break
+        # ==========================================
+        # PRICE CHANGE
+        # ==========================================
+        
+        if len(price_values) >= 2:
+        
+            previous_price = price_values[-2]
+        
+            price_change = current_price - previous_price
+        
+            percent_change = (
+                (price_change / previous_price) * 100
+            )
+        
+            st.write("### Price Change")
+        
+            if price_change > 0:
+        
+                st.success(
+                    f"▲ ₹{price_change:,.0f} ({percent_change:.2f}%)"
+                )
+        
+            elif price_change < 0:
+        
+                st.error(
+                    f"▼ ₹{abs(price_change):,.0f} ({abs(percent_change):.2f}%)"
+                )
+        
+            else:
+        
+                st.info("No Price Change")
         # ==========================================
         # PRICE TREND CHART
         # ==========================================
